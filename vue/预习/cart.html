@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cart</title>
+    <script src="https://unpkg.com/vue"></script>
+    <style>
+        .active {
+            background-color: #ddd;
+        }
+
+        .message-box {
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .message-box-close {
+
+        }
+        .success {
+            background: #4fc08d;
+            border: 1px solid #42b983;
+        }
+
+        .warning {
+            background: #f66;
+            border: 1px solid #d63200;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <h2>{{ title }}</h2>
+    <input type="text" v-model.number="price">
+    <button @click="batchPrice">batch price</button>
+    <course-add v-model="course" @add-course="addCourse"></course-add>
+    <course-list :courses="courses"></course-list>
+    <message ref="msg-success" class="success">success</message>
+    <message ref="msg-warning" class="warning">warning</message>
+    <button @click="clearMsg">clear</button>
+</div>
+<script>
+
+    Vue.prototype.$bus = new Vue();
+
+    Vue.component('course-add', {
+        template: `
+          <div>
+          <input type="text" :value="value" @input="onInput">
+          <button @click="addCourse">add</button>
+
+          </div>
+        `,
+        props: ['value'],
+        methods: {
+            addCourse() {
+                this.$emit('add-course');
+            },
+            onInput(e) {
+                this.$emit('input', e.target.value)
+            }
+        },
+    })
+    Vue.component('course-list', {
+        template: `
+          <div>
+          <p v-if="courses.length === 0">nothing</p>
+          <ul>
+            <li v-for="c in courses" :key="c.name" :class="{'active': selectedCourse === c}"
+                @click="selectedCourse = c">
+              {{ c.name }}
+              <span>$</span>{{ c.price }}
+            </li>
+          </ul>
+          <p>{{ total }}</p>
+          </div>
+        `,
+        data() {
+            return {
+                selectedCourse: null,
+            }
+        },
+        props: {
+            courses: {
+                type: Array,
+                default: [],
+            }
+        },
+        computed: {
+            total() {
+                return this.courses.length;
+            }
+        }
+
+    })
+
+    Vue.component('message', {
+        template: `
+            <div class="message-box" v-show="show">
+                <slot></slot>
+                <span class="message-box-close" @click="toggle">X</span>
+            </div>
+        `,
+        data() {
+            return {
+                show: false,
+            }
+        },
+        methods: {
+            toggle() {
+                this.show = !this.show;
+            }
+        },
+        mounted() {
+            this.$bus.$on('msg-clear', () => {
+                this.show = false;
+            })
+        }
+    })
+
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                title: 'cart',
+                courses: [],
+                course: '',
+                price: 0,
+            }
+        },
+        methods: {
+            addCourse() {
+                if (this.course === '') {
+                    this.$bus.$emit('msg-warning');
+                    return;
+                }
+                this.courses.push({
+                    name: this.course
+                });
+                this.course = '';
+                this.$bus.$emit('msg-success');
+            },
+            batchPrice() {
+                this.courses.forEach(course => {
+                    this.$set(course, 'price', this.price);
+                })
+            },
+            getCourses() {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve([
+                            {name: 'dd', price: 1}
+                        ])
+                    }, 2000)
+                })
+            },
+            clearMsg() {
+                this.$bus.$emit('msg-clear')
+            }
+        },
+        async mounted() {
+            this.courses = await this.getCourses();
+            this.$bus.$on('msg-success', () => this.$refs['msg-success'].show = true);
+            this.$bus.$on('msg-warning', () => this.$refs['msg-warning'].show = true);
+        }
+    })
+</script>
+</body>
+</html>

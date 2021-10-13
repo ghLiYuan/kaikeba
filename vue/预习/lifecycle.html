@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model="item">
+    <button @click="add">add</button>
+    <div>
+        <ul>
+            <li v-for="c in courses">{{ c }}</li>
+        </ul>
+        <div>total: {{ total }}</div>
+    </div>
+</div>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                courses: [],
+                item: '',
+                // total: 0,
+            }
+        },
+        methods: {
+            add() {
+                this.courses.push(this.item);
+                this.item = '';
+            }
+        },
+        computed: {
+            total() {
+                return this.courses.length;
+            }
+        },
+        beforeCreate() {
+            console.log('beforeCreate')
+        },
+        created() {
+            console.log('created')
+        },
+        beforeMount() {
+            console.log('beforeMount')
+        },
+        mounted() {
+            console.log('mounted')
+        },
+        beforeUpdate() {
+            console.log('beforeUpdate')
+        },
+        updated() {
+            console.log('updated')
+        },
+        activated() {
+            console.log('activated')
+        },
+        deactivated() {
+            console.log('deactivated')
+        },
+        beforeDestroy() {
+            console.log('beforeDestroy')
+        },
+        destroyed() {
+            console.log('destroyed')
+        },
+        errorCaptured() {
+            console.log('errorCaptured')
+        },
+    })
+
+    setTimeout(() => {
+        app.$destroy();
+    }, 3000)
+</script>
+</body>
+</html>
