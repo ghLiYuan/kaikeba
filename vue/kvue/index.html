@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>kvue</title>
+    <script src="kvue.js"></script>
+</head>
+<body>
+<div id="app">
+    <p>{{ message }}</p>
+
+</div>
+<script>
+    var app = new KVue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!'
+        }
+    })
+</script>
+</body>
+</html>
