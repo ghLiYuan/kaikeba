@@ -4,19 +4,42 @@
     <meta charset="UTF-8">
     <title>kvue</title>
     <script src="kvue.js"></script>
+    <style>
+        p {
+            line-height: 20px;
+            height: 20px;
+            margin: 10px;
+            border: 1px deepskyblue solid;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
     <p>{{ message }}</p>
-
+    <p v-text="message"></p>
+    <p>{{ counter }}</p>
+    <p v-html="span"></p>
+    <input type="text" v-model="message">
+    <button @click="alert">alert</button>
 </div>
 <script>
     var app = new KVue({
         el: '#app',
         data: {
-            message: 'Hello Vue!'
+            message: 'Hello Vue!',
+            counter: 0,
+            span: `<span>span html</span>`,
+        },
+        methods: {
+            alert() {
+                alert('1')
+            }
         }
     })
+    // setInterval(() => {
+    //     app.counter++
+    //     // console.log(app.counter);
+    // }, 1000);
 </script>
 </body>
 </html>
