@@ -17,8 +17,8 @@ function reactive(obj, key, val) {
                 if (typeof newVal === 'object')
                     observe(newVal);
                 // console.log(`set ${key} ${newVal}`);
-                dep.notify();
                 val = newVal;
+                dep.notify();
             }
         }
     })
@@ -89,7 +89,6 @@ class Compile {
                 this.compileText(childNode);
             } else if (childNode.nodeType === 1) {
                 // 匹配指令
-                // v-text
                 this.compileElement(childNode);
             }
             if (childNode.childNodes?.length) {
@@ -107,8 +106,17 @@ class Compile {
                 const key = attr.value;
                 let directive = attr.name.substring(2);
                 this[directive] && this[directive](node, key);
+            } else if (attr.name.startsWith('@')) {
+                const eventFn = attr.value;
+                const eventName = attr.name.substring(1);
+                this.event(node, eventName, eventFn);
             }
         }
+    }
+    event(node, eventName, eventFn) {
+        node.addEventListener(eventName, (event) => {
+            this.$vm.$methods && this.$vm.$methods[eventFn].call(this.$vm);
+        })
     }
     // 约定指令的节点处理方法名 v-text
     text(node, key) {
@@ -118,8 +126,13 @@ class Compile {
         this.update(node, key, 'html');
     }
     model(node, key) {
-        debugger;
-
+        node.addEventListener('input', (event) => {
+            this.$vm[key] = event.target.value;
+        })
+        // node.addEventListener('change', (event) => {
+        //     this.$vm[key] = event.target.value;
+        // })
+        this.update(node, key, 'model');
     }
     update(node, key, directive) {
         const fn = this[`${directive}Updater`];
@@ -135,13 +148,16 @@ class Compile {
     htmlUpdater(node, val) {
         node.innerHTML = val;
     }
-
+    modelUpdater(node, val) {
+        node.value = val;
+    }
 }
 
 class KVue {
     constructor(options) {
         this.$el = options.el;
         this.$data = options.data;
+        this.$methods = options.methods;
         observe(this.$data);
         proxy(this);
         new Compile(this.$el, this);
