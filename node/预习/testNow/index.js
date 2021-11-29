@@ -11,4 +11,13 @@ module.exports = class TestNow {
             base: testName
         })
     }
+
+    genTestCode(methodName, filePath) {
+        return `
+            test(fn ${methodName}, () => {
+                const src = new (require(${filePath}))();
+                // expect().toBe();
+            )
+        `
+    }
 }
