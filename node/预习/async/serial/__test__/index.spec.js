@@ -1,5 +1,5 @@
-const index = require('../index.js');
+const { cb } = require('../index.js');
 test('cb', done => {
-    index.cb();
+    cb();
     done()
 })
