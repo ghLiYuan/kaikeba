@@ -8,7 +8,7 @@ function reactive(obj, key, val) {
 
     Object.defineProperty(obj, key, {
         get() {
-            // console.log(`get ${key} ${val}`);
+            console.log(`get ${key} ${val}`);
             Dep.target && dep.addDep(Dep.target);
             return val;
         },

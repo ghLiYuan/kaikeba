@@ -23,6 +23,7 @@
     const { init, h } = snabbdom;
     const patch = init([]);
     let vnode;
+    window.vnode = vnode;
 
     function update() {
         if (!vnode) {
@@ -40,9 +41,9 @@
     const obj = {};
     defineReactive(obj, 'foo', '');
     obj.foo = new Date().toLocaleTimeString();
-    // setInterval(() => {
-    //     obj.foo = new Date().toLocaleTimeString();
-    // }, 1000)
+    setInterval(() => {
+        obj.foo = new Date().toLocaleTimeString();
+    }, 1000)
 </script>
 </body>
 </html>

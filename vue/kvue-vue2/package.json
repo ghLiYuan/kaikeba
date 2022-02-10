@@ -1,16 +1,18 @@
 {
-  "name": "vue-kaikeba",
+  "name": "kvue-vue2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dep.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "http-server -p 4000"
+    "start": "webpack --entry"
   },
   "keywords": [],
   "author": "ghLiYuan",
   "license": "ISC",
-  "dependencies": {
-    "snabbdom": "^0.7.4"
+  "devDependencies": {
+    "webpack": "^5.68.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4"
   }
 }
