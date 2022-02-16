@@ -9,9 +9,7 @@ var app = new KVue({
   },
   render(h) {
     // h函数描述虚拟dom
-    return h('h1', {}, [
-      this.counter + ''
-    ])
+    return h('h1', {}, this.counter)
   }
 })
 setInterval(() => {
