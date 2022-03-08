@@ -1,5 +1,6 @@
 import Watcher from './watcher';
 import { observe } from './reactive';
+import patch from './patch';
 function proxy(vm) {
     Object.keys(vm.$data).forEach(key => {
         Object.defineProperty(vm, key, {
@@ -41,37 +42,16 @@ export default class KVue {
     }
     _update(vnode) {
         if (!this.prevnode) {
-            // 初始更新
-            const parent = this.$el.parentElement;
-            const el = this.createElement(vnode);
-            parent.insertBefore(el, this.$el.nextSibling);
-            parent.removeChild(this.$el);
-            this.$el = el;
-            this.prevnode = vnode;
+            patch(this.$el, vnode);
         } else {
-            // patch
-            this.patch(this.prevnode, vnode);
+            patch(this.prevnode, vnode, this.prevnode.$el);
         }
-    }
-    createElement(vnode) {
-        const { tag, props, childs } = vnode;
-        const el = document.createElement(tag);
-        if (['string', 'number'].includes(typeof childs)) {
-            el.innerText = childs.toString();
-        }
-        return el;
-    }
-    patch(oldVnode, vnode) {
-        // todo: 参考源码写diff算法
-        if (oldVnode.tag === vnode.tag) {
-            if (['string', 'number'].includes(typeof vnode.childs)) {
-                this.$el.innerText = vnode.childs;
-            }
-        }
+        this.prevnode = vnode;
     }
     $mount(selector) {
         this.$el = document.querySelector(selector) || null;
         this.updateComponent();
     }
 }
+
 
