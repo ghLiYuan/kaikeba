@@ -47,8 +47,10 @@ export default class KVue {
             parent.insertBefore(el, this.$el.nextSibling);
             parent.removeChild(this.$el);
             this.$el = el;
+            this.prevnode = vnode;
         } else {
             // patch
+            this.patch(this.prevnode, vnode);
         }
     }
     createElement(vnode) {
@@ -60,7 +62,12 @@ export default class KVue {
         return el;
     }
     patch(oldVnode, vnode) {
-
+        // todo: 参考源码写diff算法
+        if (oldVnode.tag === vnode.tag) {
+            if (['string', 'number'].includes(typeof vnode.childs)) {
+                this.$el.innerText = vnode.childs;
+            }
+        }
     }
     $mount(selector) {
         this.$el = document.querySelector(selector) || null;
