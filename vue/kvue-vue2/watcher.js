@@ -5,12 +5,15 @@ export default class Watcher {
     this.updateFn = updateFn;
     // 触发getter，在getter中收集watcher进dep
     Dep.target = this;
-    updateFn.call(vm);
+    this.get();
     Dep.target = null;
   }
-  update() {
-    // this.updateFn.call(this.vm, this.vm[this.key]);
-    console.log('watcher update')
+  // 依赖收集
+  // todo: 可进行排队，实现异步批量更新
+  get() {
     this.updateFn.call(this.vm);
+  }
+  update() {
+    this.get();
   }
 }

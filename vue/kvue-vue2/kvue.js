@@ -19,6 +19,9 @@ export default class KVue {
         this.$data = options.data;
         this.$methods = options.methods;
         this.$options = options;
+
+        this.prevnode = null;
+
         observe(this.$data);
         proxy(this);
 
@@ -29,13 +32,34 @@ export default class KVue {
     }
     updateComponent() {
         if (this.$options.render) {
-            this.$options.render.call(this.$createElement);
+            const vnode = this.$options.render.call(this, this.$createElement);
+            this._update(vnode)
         }
     }
     $createElement(tag, props, childs) {
-        this._update({ tag, props, childs })
+        return { tag, props, childs }
     }
     _update(vnode) {
+        if (!this.prevnode) {
+            // 初始更新
+            const parent = this.$el.parentElement;
+            const el = this.createElement(vnode);
+            parent.insertBefore(el, this.$el.nextSibling);
+            parent.removeChild(this.$el);
+            this.$el = el;
+        } else {
+            // patch
+        }
+    }
+    createElement(vnode) {
+        const { tag, props, childs } = vnode;
+        const el = document.createElement(tag);
+        if (['string', 'number'].includes(typeof childs)) {
+            el.innerText = childs.toString();
+        }
+        return el;
+    }
+    patch(oldVnode, vnode) {
 
     }
     $mount(selector) {

@@ -5,7 +5,7 @@
   "main": "dep.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --entry"
+    "start": "webpack --entry ./test.js --watch --mode development"
   },
   "keywords": [],
   "author": "ghLiYuan",
