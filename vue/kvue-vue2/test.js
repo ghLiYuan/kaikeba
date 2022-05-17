@@ -11,9 +11,9 @@ var app = new KVue({
     // h函数描述虚拟dom
     // return h('h1', {}, this.counter)
     return h('h1', {}, [
-      { tag: 'h2', props: {}, childs: this.counter },
-      { tag: 'h2', props: {}, childs: this.counter * 2 },
-      { tag: 'h2', props: {}, childs: this.counter * 3 },
+      h('h2', {}, this.counter),
+      h('h2', {}, this.counter * 2),
+      h('h2', {}, this.counter * 3),
     ])
   }
 })
