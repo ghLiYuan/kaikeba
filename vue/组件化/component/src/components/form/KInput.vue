@@ -1,7 +1,6 @@
 <template>
   <div data-custom="abc">
     <input
-      type="text"
       :value="value"
       @input="onInput"
       v-bind="$attrs"
@@ -12,7 +11,7 @@
 <script>
 export default {
   name: "KInput",
-  inheritAttrs: false,
+  // inheritAttrs: false,
   props: {
     value: {
       type: [ String, Number ],
@@ -24,6 +23,9 @@ export default {
       this.$emit('input', e.target.value)
     }
   },
+  mounted() {
+    console.log(this.$attrs)
+  }
 }
 </script>
 
