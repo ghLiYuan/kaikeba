@@ -6,7 +6,12 @@
 
 <script>
 export default {
-  name: "KForm"
+  name: "KForm",
+  methods: {
+    validate() {
+
+    }
+  },
 }
 </script>
 

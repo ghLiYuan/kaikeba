@@ -1,5 +1,7 @@
 <template>
-  <KForm>
+  <KForm
+    ref="form"
+  >
     <KFormItem
         label="username"
         prop="username"
@@ -20,6 +22,7 @@
       />
     </KFormItem>
 
+    <button @click="handleLogin">登录</button>
   </KForm>
 </template>
 
@@ -51,8 +54,8 @@ export default {
     }
   },
   methods: {
-    validate() {
-      console.log('form validate')
+    handleLogin() {
+      this.$refs.form.validate();
     }
   },
   mounted() {
